@@ -36,8 +36,9 @@ class HTTPClient(object):
     def get_host_port(self,url):
         substr = url.split(':')
         host = substr[1].replace('//', '')
-        port = substr[2].split('/')[0]
-        return host, port
+        port = int(substr[2].split('/')[0])
+        path = substr[2].split('/')[1]
+        return host, port, path
 
     def connect(self, host, port):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -72,10 +73,14 @@ class HTTPClient(object):
         return buffer.decode('utf-8')
 
     def GET(self, url, args=None):
-        code = 500
-        body = ""
-        host, port = self.get_host_port(url)
+        host, port, path = self.get_host_port(url)
         self.connect(host, port)
+        data = "GET " + path + "HTTP/1.1\r\nHost: " + \
+                host + "\r\nUser-Agent: curl/7.64.1\r\nAccept: */*\r\n\r\n"
+        self.sendall(data)
+        data = self.recvall(self.socket)
+        code = self.get_code(data)
+        body = self.get_body(data)
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
