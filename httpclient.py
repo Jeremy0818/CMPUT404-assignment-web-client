@@ -33,7 +33,11 @@ class HTTPResponse(object):
         self.body = body
 
 class HTTPClient(object):
-    #def get_host_port(self,url):
+    def get_host_port(self,url):
+        substr = url.split(':')
+        host = substr[1].replace('//', '')
+        port = substr[2].split('/')[0]
+        return host, port
 
     def connect(self, host, port):
         self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -70,6 +74,8 @@ class HTTPClient(object):
     def GET(self, url, args=None):
         code = 500
         body = ""
+        host, port = self.get_host_port(url)
+        self.connect(host, port)
         return HTTPResponse(code, body)
 
     def POST(self, url, args=None):
