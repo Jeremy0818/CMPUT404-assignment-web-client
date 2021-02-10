@@ -37,7 +37,8 @@ class HTTPClient(object):
     def handle_args(self, args):
         """
     	This function will get the dictionary arguments and convert it
-    	into application/x-www-form-urlencoded content type.
+    	into application/x-www-form-urlencoded content type using urllib
+        parse urlencode helper function.
 
     	Argument:
     		args: a dictionary that contains the parameters for posting
@@ -46,9 +47,10 @@ class HTTPClient(object):
     	"""
         params = ""
         if args is None: return params
-        for k, v in args.items():
-            params += k + "=" + v + "&"
-        return params[:-1]
+        # for k, v in args.items():
+        #     params += k + "=" + v + "&"
+        params = urllib.parse.urlencode(args)
+        return params
 
     def get_host_port_path(self,url):
         """
@@ -210,23 +212,20 @@ class HTTPClient(object):
         try:
             params = self.handle_args(args)
             print("Params: ", params)
-        except BaseException as e:
-            print(e)
-            return HTTPResponse(404, "")
-        content_length = str(len(params))
-        try:
+            content_length = str(len(params))
             host, port, path = self.get_host_port_path(url)
+            self.connect(host, port)
+            data = "POST " + path + " HTTP/1.1\r\n" + \
+                    "Host: " + host + "\r\n" + \
+                    "Content-Type: application/x-www-form-urlencoded\r\n" + \
+                    "Content-length: " + content_length + "\r\nConnection: close\r\n\r\n" + \
+                    params
+            self.sendall(data)
+            data = self.recvall(self.socket)
         except BaseException as e:
             print(e)
             return HTTPResponse(404, "")
-        self.connect(host, port)
-        data = "POST " + path + " HTTP/1.1\r\n" + \
-                "Host: " + host + "\r\n" + \
-                "Content-Type: application/x-www-form-urlencoded\r\n" + \
-                "Content-length: " + content_length + "\r\nConnection: close\r\n\r\n" + \
-                params
-        self.sendall(data)
-        data = self.recvall(self.socket)
+        
         print(">>>>>--------------------------------------------------")
         print(data)
         print("<<<<<--------------------------------------------------")
