@@ -160,14 +160,16 @@ class HTTPClient(object):
         print("\n--- Making GET request ---\n")
         try:
             host, port, path = self.get_host_port_path(url)
+            self.connect(host, port)
+            data = "GET " + path + " HTTP/1.1\r\n" + \
+                "Host: " + host + "\r\nConnection: close\r\n\r\n"
+            self.sendall(data)
+            data = self.recvall(self.socket)
         except BaseException as e:
             print(e)
             return HTTPResponse(404, "")
-        self.connect(host, port)
-        data = "GET " + path + " HTTP/1.1\r\n" + \
-                "Host: " + host + "\r\nConnection: close\r\n\r\n"
-        self.sendall(data)
-        data = self.recvall(self.socket)
+        
+        
         print(">>>>>--------------------------------------------------")
         print(data)
         print("<<<<<--------------------------------------------------")
