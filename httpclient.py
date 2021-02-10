@@ -165,9 +165,7 @@ class HTTPClient(object):
             return HTTPResponse(404, "")
         self.connect(host, port)
         data = "GET " + path + " HTTP/1.1\r\n" + \
-                "Host: " + host + "\r\n" + \
-                "User-Agent: curl/7.64.1\r\n" + \
-                "Accept: */*\r\n\r\ns"
+                "Host: " + host + "\r\nConnection: close\r\n\r\n"
         self.sendall(data)
         data = self.recvall(self.socket)
         print(">>>>>--------------------------------------------------")
@@ -223,10 +221,8 @@ class HTTPClient(object):
         data = "POST " + path + " HTTP/1.1\r\n" + \
                 "Host: " + host + "\r\n" + \
                 "Content-Type: application/x-www-form-urlencoded\r\n" + \
-                "Content-length: " + content_length + "\r\n\r\n" + \
+                "Content-length: " + content_length + "\r\nConnection: close\r\n\r\n" + \
                 params
-                #"User-Agent: curl/7.64.1\r\n" + \
-                #"Accept: */*\r\n\r\n" + \
         self.sendall(data)
         data = self.recvall(self.socket)
         print(">>>>>--------------------------------------------------")
