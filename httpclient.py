@@ -47,8 +47,6 @@ class HTTPClient(object):
     	"""
         params = ""
         if args is None: return params
-        # for k, v in args.items():
-        #     params += k + "=" + v + "&"
         params = urllib.parse.urlencode(args)
         return params
 
@@ -91,12 +89,12 @@ class HTTPClient(object):
     	Return:
     		code: status code indicated in the data
     	"""
-        header = self.get_headers(data)
+        header = self.get_headers_first(data)
         code = int(header.split(' ')[1])
         print("Status code: ", code)
         return code
 
-    def get_headers(self,data):
+    def get_headers_first(self,data):
         """
     	This function will get the header from the data returned from the
     	server and return the header.
@@ -106,7 +104,7 @@ class HTTPClient(object):
     	Return:
     		header: header of the HTTP response
     	"""
-        return data.split('\r\n')[0]
+        return data.split('\r\n', 1)[0]
 
     def get_body(self, data):
         """
@@ -118,7 +116,7 @@ class HTTPClient(object):
     	Return:
     		header: body of the HTTP response
     	"""
-        return data.split('\r\n\r\n')[1]
+        return data.split('\r\n\r\n', 1)[1]
     
     def sendall(self, data):
         self.socket.sendall(data.encode('utf-8'))
