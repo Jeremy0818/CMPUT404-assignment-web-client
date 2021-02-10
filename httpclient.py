@@ -89,12 +89,13 @@ class HTTPClient(object):
     	Return:
     		code: status code indicated in the data
     	"""
-        header = self.get_headers_first(data)
-        code = int(header.split(' ')[1])
+        header = self.get_headers(data)
+        first_line = header.split('\r\n')[0]
+        code = int(first_line.split(' ')[1])
         print("Status code: ", code)
         return code
 
-    def get_headers_first(self,data):
+    def get_headers(self,data):
         """
     	This function will get the header from the data returned from the
     	server and return the header.
@@ -104,7 +105,7 @@ class HTTPClient(object):
     	Return:
     		header: header of the HTTP response
     	"""
-        return data.split('\r\n', 1)[0]
+        return data.split('\r\n\r\n', 1)[0]
 
     def get_body(self, data):
         """
