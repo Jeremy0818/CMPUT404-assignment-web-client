@@ -163,7 +163,7 @@ class HTTPClient(object):
             host, port, path = self.get_host_port_path(url)
             self.connect(host, port)
             data = "GET " + path + " HTTP/1.1\r\n" + \
-                "Host: " + host + "\r\nConnection: close\r\n\r\n"
+                "Host: " + host + "\r\nAccept-Charset: UTF-8\r\nConnection: close\r\n\r\n"
             self.sendall(data)
             data = self.recvall(self.socket)
         except BaseException as e:
@@ -217,7 +217,7 @@ class HTTPClient(object):
             data = "POST " + path + " HTTP/1.1\r\n" + \
                     "Host: " + host + "\r\n" + \
                     "Content-Type: application/x-www-form-urlencoded\r\n" + \
-                    "Content-length: " + content_length + "\r\nConnection: close\r\n\r\n" + \
+                    "Content-length: " + content_length + "\r\nAccept-Charset: UTF-8\r\nConnection: close\r\n\r\n" + \
                     params
             self.sendall(data)
             data = self.recvall(self.socket)
