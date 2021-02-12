@@ -173,7 +173,7 @@ class HTTPClient(object):
             data = self.recvall(self.socket)
         except BaseException as e:
             print(e)
-            return HTTPResponse(404, "")
+            return HTTPResponse(404, "File not found")
         
         
         print(">>>>>--------------------------------------------------")
@@ -228,7 +228,7 @@ class HTTPClient(object):
             data = self.recvall(self.socket)
         except BaseException as e:
             print(e)
-            return HTTPResponse(404, "")
+            return HTTPResponse(404, "File not found")
         
         print(">>>>>--------------------------------------------------")
         print(data)
