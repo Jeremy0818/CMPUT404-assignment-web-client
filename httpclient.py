@@ -63,7 +63,8 @@ class HTTPClient(object):
     		path: the specific path of the request
     	"""
         o = urllib.parse.urlparse(url)
-        host = o.netloc.split(':')[0]
+        print(o.hostname)
+        host = o.hostname
         port = o.port
         if port is None:
             port = 80  # default port number is 80
