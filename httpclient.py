@@ -71,9 +71,11 @@ class HTTPClient(object):
         path = o.path
         if len(path) == 0:
             path = "/"
+        if len(o.query) != 0:
+            path += "?" + o.query
         print("Host:", host, ", Port: ", port, ", Path: ", path)
         print("--------- Query String: ", o.query)
-        path += "?" + o.query
+        
         return host, port, path
 
     def connect(self, host, port):
